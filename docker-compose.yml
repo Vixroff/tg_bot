@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    env_file:
+      - .env.compose
+    ports:
+      - "8000:8000"
+  
+  db:
+    image: postgres:16-alpine
+    restart: always
+    env_file:
+      - .env.compose
+    ports:
+      - "5432:5432"
+    
+  
