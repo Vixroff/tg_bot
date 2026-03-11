@@ -13,9 +13,7 @@ TOKEN = os.getenv("TOKEN")
 
 
 async def run():
-    bot = Bot(
-        token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     try:
         await dispatcher.start_polling(bot)
     finally:

@@ -2,7 +2,12 @@
 .env.compose
 .venv
 .ruff_cache
-__pycache__
 .DS_Store
 .gitignore
+.cursor
+.pytest_cache
+__pycache__
+LICENSE
 Dockerfile
+frontend/node_modules
+frontend/dist

@@ -12,14 +12,14 @@ POSTGRES_PORT = os.getenv("POSTGRES_PORT")
 POSTGRES_USER = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 POSTGRES_DB = os.getenv("POSTGRES_DB")
+DATABASE_URL = f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
-engine = create_async_engine(
-    url=f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}",
-    echo=True,
-)
+engine = create_async_engine(url=DATABASE_URL, echo=True)
 
 session_maker = async_sessionmaker(
-    bind=engine, expire_on_commit=False, autoflush=False
+    bind=engine,
+    expire_on_commit=False,
+    autoflush=False,
 )
 
 

@@ -6,3 +6,9 @@ migrations_upgrade:
 
 lint:
 	poetry run ruff check --select I --fix . && poetry run ruff format
+
+up:
+	docker compose up --build -d
+
+down:
+	docker compose down
