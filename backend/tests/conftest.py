@@ -21,7 +21,6 @@ def _test_database_url(tmp_path_factory: pytest.TempPathFactory) -> None:
 
 @pytest_asyncio.fixture()
 async def _db_engine():
-    # Import after DATABASE_URL is set.
     from backend.database.models import AsyncBase
 
     url = os.environ["DATABASE_URL"]

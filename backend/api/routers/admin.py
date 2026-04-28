@@ -155,33 +155,6 @@ async def admin_list_users(
     ]
 
 
-@router.patch("/users/{user_id}", response_model=AdminUserOut)
-async def admin_update_user(
-    user_id: int,
-    payload: AdminUserUpdate,
-    session: AsyncSession = Depends(get_db_session),
-    admin_user: User = Depends(get_admin_user),
-) -> dict[str, Any]:
-    _ = admin_user
-
-    result = await session.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    user.is_admin = payload.is_admin
-    await session.commit()
-    await session.refresh(user)
-    return {
-        "id": user.id,
-        "telegram_id": user.telegram_id,
-        "username": user.username,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "is_admin": user.is_admin,
-        "created_at": user.created_at.isoformat() if user.created_at else None,
-    }
-
-
 def _serialize_product(product: Product) -> dict[str, Any]:
     return {
         "id": product.id,

@@ -10,7 +10,7 @@ COPY frontend ./
 RUN npm run build
 
 # === BACKEND
-FROM python:3.12.0-slim AS backend-builder
+FROM python:3.14.4-slim AS backend-builder
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
