@@ -20,6 +20,22 @@ from backend.services import orders as orders_service
 dispatcher = Dispatcher()
 
 MINI_APP_URL = os.getenv("MINI_APP_URL")
+START_PHOTO_URL = os.getenv("START_PHOTO_URL")
+
+
+def _shop_keyboard() -> InlineKeyboardMarkup | None:
+    if not MINI_APP_URL:
+        return None
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="Открыть магазин",
+                    web_app=WebAppInfo(url=MINI_APP_URL),
+                )
+            ]
+        ]
+    )
 
 
 @dispatcher.message(CommandStart())
@@ -47,21 +63,20 @@ async def command_start_handler(message: Message):
         is_new_user = result.scalar_one()
 
     if is_new_user:
-        text_message = f"hello new bitch {message.from_user.username}! buy a fucking fish"
-    else:
-        text_message = "don't be an idiot! you are alrady started, fuck off"
-
-    if MINI_APP_URL:
-        keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        text="Открыть магазин",
-                        web_app=WebAppInfo(url=MINI_APP_URL),
-                    )
-                ]
-            ]
+        first_name = message.from_user.first_name or message.from_user.username or "друг"
+        text_message = (
+            f"Привет, {first_name}!\n\n"
+            "Добро пожаловать в рыбную лавку. Здесь можно посмотреть каталог, "
+            "выбрать товар и оформить заказ прямо в Mini App."
         )
+    else:
+        text_message = "Магазин уже готов. Открой Mini App, чтобы посмотреть каталог и свои заказы."
+
+    keyboard = _shop_keyboard()
+
+    if is_new_user and START_PHOTO_URL:
+        await message.answer_photo(photo=START_PHOTO_URL, caption=text_message, reply_markup=keyboard)
+    elif keyboard:
         await message.answer(text=text_message, reply_markup=keyboard)
     else:
         await message.answer(text=text_message)
@@ -69,20 +84,11 @@ async def command_start_handler(message: Message):
 
 @dispatcher.message(Command("menu", "shop"))
 async def command_menu_handler(message: Message):
-    if not MINI_APP_URL:
+    keyboard = _shop_keyboard()
+    if not keyboard:
         await message.answer(text=("Mini App пока не настроено. Обратитесь к администратору бота."))
         return
 
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="Открыть магазин",
-                    web_app=WebAppInfo(url=MINI_APP_URL),
-                )
-            ]
-        ]
-    )
     await message.answer(
         text="Открой Mini App, чтобы выбрать и заказать рыбу.",
         reply_markup=keyboard,

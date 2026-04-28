@@ -11,3 +11,4 @@ LICENSE
 Dockerfile
 frontend/node_modules
 frontend/dist
+.postgres_data
